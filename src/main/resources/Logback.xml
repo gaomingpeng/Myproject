@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 从高到地低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+<!-- 日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+<!-- 以下 每个配置的 filter 是过滤掉输出文件里面，会出现高级别文件，依然出现低级别的日志信息，通过filter 过滤只记录本级别的日志 -->
+<configuration>
+	<property name="pattern"
+		value="%d{yyyy-MM-dd HH:mm:ss} [%-5p][%C{1}:%-5L]%m%n" />
+	<property name="path" value="E:/logs" />
+	<property name="maxHistory" value="5" />
+	<!-- 控制台输出 -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8">
+			<pattern>${pattern}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="INFO"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${path}/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${path}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>2</maxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>${pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="DEBUG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${path}/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${path}/debug.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>${maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>${pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印DEBUG日志 -->
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${path}/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${path}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>${maxHistory}</maxHistory>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>${pattern}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印ERROR日志 -->
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<logger name="com.gmp" level="DEBUG">
+		<appender-ref ref="DEBUG" />
+	</logger>
+	<logger name="com.gmp" level="ERROR">
+		<appender-ref ref="ERROR" />
+	</logger>
+	<logger name="org.springframework" level="WARN" />
+	 <logger name="com" level="WARN" />
+	<!--<logger name="org.thymeleaf" level="WARN" />
+	<logger name="org.mybatics" level="WARN" /> -->
+	<root level="DEBUG">
+		<!-- 级别高于root默认的级别时 会输出 -->
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ERROR" />
+		<appender-ref ref="INFO" />
+		<appender-ref ref="DEBUG" />
+	</root>
+</configuration> 

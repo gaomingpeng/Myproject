@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gmp.user.mapper.UserOpInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.gmp.user.entity.UserOpInfo" >
+    <result column="id" property="id" jdbcType="CHAR" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="optime" property="optime" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+
+  <resultMap id="UserLoginCountMap" type="com.gmp.user.entity.LoginCountVo">
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="logincount" property="logincount" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List">id, userid, `action`,optime, username </sql>
+  <insert id="insert" parameterType="com.gmp.user.entity.UserOpInfo" >
+    insert into useropinfo (id, userid, `action`,
+      optime, username)
+    values (#{id,jdbcType=CHAR}, #{userid,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
+      #{optime,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gmp.user.entity.UserOpInfo" >
+    insert into useropinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="action != null" >
+        `action`,
+      </if>
+      <if test="optime != null" >
+        optime,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null" >
+        #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="optime != null" >
+        #{optime,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getCount"   resultType="java.lang.Long">
+    SELECT  COUNT(*) from   useropinfo
+  </select>
+  <select id="selectByPageQuery" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT  id, userid, `action`,username,optime  from useropinfo limit #{param1},#{param2}
+  </select>
+
+  <select id="getEveryUserLoginCount" resultMap="UserLoginCountMap" >
+    SELECT  count(*) as logincount,userid from useropinfo WHERE action like '%checklogin.do%' GROUP BY userid
+  </select>
+</mapper>

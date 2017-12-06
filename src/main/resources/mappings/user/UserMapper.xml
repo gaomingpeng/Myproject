@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gmp.user.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.gmp.user.entity.User" >
+    <result column="id" property="id" jdbcType="CHAR" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="checklogin" parameterType="java.lang.String" resultType="com.gmp.user.entity.User">
+     SELECT id, userid, password,username,role FROM  USER  where  userid=#{param1}
+  </select>
+
+  <select id="checkRegister" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(*)  FROM  USER  where  userid=#{param}
+  </select>
+  <insert id="insert" parameterType="com.gmp.user.entity.User" >
+    insert into user (id, userid, password, 
+      username,role)
+    values (#{id,jdbcType=CHAR}, #{userid,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR},#{role,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gmp.user.entity.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
