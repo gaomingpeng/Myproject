@@ -1,6 +1,7 @@
 package com.gmp.user.controller;
 
 
+//import com.gmp.common.activeMQ.producer.QueueSender;
 import com.gmp.common.activeMQ.producer.QueueSender;
 import com.gmp.common.resetAllMappers;
 import com.gmp.user.entity.User;
@@ -18,6 +19,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,8 +52,11 @@ public class LoginController {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
+  @Autowired
     private QueueSender queueSender;
+
+    @Value("${queueName}")
+   private  String queueName;
 
     Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -99,7 +104,7 @@ public class LoginController {
             insertUserOpInfo(user,request.getRequestURI().toString());
             request.getSession().setAttribute("USER",user);
             request.getSession().setAttribute("roleName",roleService.getRolename(userid));
-            queueSender.send(null,user.getUserid());
+            queueSender.send(queueName,user.getUserid());
 
         } else {
             map.put("msg",msg);

@@ -9,17 +9,24 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-4.1.xsd
 http://www.springframework.org/schema/mvc
 http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-<!-- 引入dbproperties文件 -->
-<context:property-placeholder location="classpath:config/dbproperties.properties" />
-    <!--  引入MQproperties文件-->
-    <context:property-placeholder location="classpath:config/activeMQ.properties" />
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <!-- 这里支持多种寻址方式：classpath和file -->
+                <!-- 引入dbproperties文件 -->
+                <value>classpath:config/dbproperties.properties</value>
+                <!--  引入MQproperties文件-->
+                <value>classpath:config/activeMQ.properties</value>
+
+            </list>
+        </property>
+    </bean>
     <!--开启自动注入-->
     <context:component-scan base-package="com.gmp.**.mapper" />
     <context:component-scan base-package="com.gmp.**.service" />
     <context:component-scan base-package="com.gmp.**.controller" />
     <context:component-scan base-package="com.gmp.common.activeMQ" />
-    <mvc:default-servlet-handler/>
-
 
      <!-- 对静态资源文件的访问  -->
 
@@ -82,5 +89,5 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd http://www.springfr
     </mvc:interceptors>
 
     <import resource="spring-mybatis.xml"/>
-    <import resource="spring-ActiveMQ.xml"/>
+   <import resource="spring-ActiveMQ.xml"/>
 </beans>
