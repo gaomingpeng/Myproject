@@ -11,8 +11,8 @@ import javax.jms.Message;
 import javax.jms.Session;
 @Component
 public class TopicSender {
-    @Autowired
-    @Qualifier("jmsTopicTemplate")//通过@Qualifier修饰符来注入对应的bean
+  @Autowired
+  @Qualifier("jmsTopicTemplate")//通过@Qualifier修饰符来注入对应的bean
     private JmsTemplate jmsTemplate;
 
 
