@@ -3,6 +3,8 @@ package com.gmp.user.controller;
 
 //import com.gmp.common.activeMQ.producer.QueueSender;
 import com.gmp.common.activeMQ.producer.QueueSender;
+import com.gmp.common.activeMQ.producer.TopicSender;
+import com.gmp.common.annotation.CurrentUser;
 import com.gmp.common.resetAllMappers;
 import com.gmp.user.entity.User;
 import com.gmp.user.entity.UserOpInfo;
@@ -55,8 +57,14 @@ public class LoginController {
   @Autowired
     private QueueSender queueSender;
 
+  @Autowired
+  private TopicSender topicSender;
+
     @Value("${queueName}")
    private  String queueName;
+
+    @Value("${topicName}")
+    private String topicName;
 
     Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -104,7 +112,7 @@ public class LoginController {
             insertUserOpInfo(user,request.getRequestURI().toString());
             request.getSession().setAttribute("USER",user);
             request.getSession().setAttribute("roleName",roleService.getRolename(userid));
-            queueSender.send(queueName,user.getUserid());
+            queueSender.send(queueName,user.getUsername()+"上线了");
 
         } else {
             map.put("msg",msg);
@@ -121,9 +129,10 @@ public class LoginController {
     }
     //退出登录
     @RequestMapping("/exit.do")
-    public  void exitCurrentUser (HttpSession session, HttpServletResponse httpServletResponse){
+    public  void exitCurrentUser (HttpSession session, HttpServletResponse httpServletResponse, @CurrentUser User user){
         Subject subject = SecurityUtils.getSubject();
         if (subject.isAuthenticated()) {
+            topicSender.send(topicName,user.getUsername()+"下线了");
             subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
         }
         logger.info("退出当前用户成功！");
