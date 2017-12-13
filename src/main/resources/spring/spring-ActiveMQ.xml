@@ -53,14 +53,14 @@
 
     <!-- 定义Queue监听器 -->
     <jms:listener-container destination-type="queue" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
-        <jms:listener destination="test.queue" ref="queueReceiver1"/>
-        <jms:listener destination="test.queue" ref="queueReceiver2"/>
+        <jms:listener destination="${queueName}" ref="queueReceiver"/>
+      <!--  <jms:listener destination="test.queue" ref="queueReceiver2"/>-->
     </jms:listener-container>
 
     <!-- 定义Topic监听器 -->
     <jms:listener-container destination-type="topic" container-type="default" connection-factory="connectionFactory" acknowledge="auto">
-        <jms:listener destination="test.topic" ref="topicReceiver1"/>
-        <jms:listener destination="test.topic" ref="topicReceiver2"/>
+        <jms:listener destination="${topicName}" ref="topicReceiver"/>
+      <!--  <jms:listener destination="test.topic" ref="topicReceiver2"/>-->
     </jms:listener-container>
 
     <!-- 消息消费者 end -->
