@@ -13,7 +13,7 @@ public class queueReceiver implements MessageListener {
     @Override
     public void onMessage(Message message) {
         try {
-            System.out.println(((TextMessage)message).getText()+"上线了！");
+            System.out.println(((TextMessage)message).getText());
         } catch (JMSException e) {
             e.printStackTrace();
         }
