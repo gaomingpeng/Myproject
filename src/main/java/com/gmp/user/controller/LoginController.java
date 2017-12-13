@@ -1,6 +1,7 @@
 package com.gmp.user.controller;
 
 
+import com.gmp.common.activeMQ.producer.QueueSender;
 import com.gmp.common.resetAllMappers;
 import com.gmp.user.entity.User;
 import com.gmp.user.entity.UserOpInfo;
@@ -35,7 +36,7 @@ import java.util.*;
 public class LoginController {
 
     @Autowired
-private LoginService loginService;
+    private LoginService loginService;
 
     @Autowired
     private resetAllMappers resetMappers;
@@ -48,6 +49,9 @@ private LoginService loginService;
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private QueueSender queueSender;
 
     Logger logger = LoggerFactory.getLogger(LoginController.class);
 
@@ -95,6 +99,7 @@ private LoginService loginService;
             insertUserOpInfo(user,request.getRequestURI().toString());
             request.getSession().setAttribute("USER",user);
             request.getSession().setAttribute("roleName",roleService.getRolename(userid));
+            queueSender.send(null,user.getUserid());
 
         } else {
             map.put("msg",msg);
